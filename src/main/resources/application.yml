@@ -10,6 +10,13 @@ spring:
   profiles:
     active: dev
 
+security:
+  jwt:
+    secret: javaapp
+
+
+
+
 server:
   port: 7885
 
