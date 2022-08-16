@@ -1,12 +1,19 @@
 package com.interactions.thefeed.controller;
 
+import com.interactions.thefeed.config.JwtTokenUtil;
 import com.interactions.thefeed.model.User;
+import com.interactions.thefeed.requestobjects.JwtRequest;
 import com.interactions.thefeed.requestobjects.UserRequest;
 import com.interactions.thefeed.responseobjects.GeneralResponseObject;
+import com.interactions.thefeed.responseobjects.JwtResponse;
 import com.interactions.thefeed.responseobjects.UserResponse;
+import com.interactions.thefeed.services.JwtUserDetailsService;
 import com.interactions.thefeed.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -14,6 +21,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private JwtUserDetailsService userDetailsService;
+
+    @Autowired
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -40,9 +55,16 @@ public class UserController {
         return userService.getOneUser(inputUser);
     }
 
-//    @PatchMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody UserRequest inputUser) {
-//        return userService.login(inputUser);
-//    }
+    @PatchMapping("/authenticate")
+    public ResponseEntity<?> login(@RequestBody JwtRequest authenticationRequest) throws Exception {
+        userService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        final UserDetails userDetails = userDetailsService
+                .loadUserByUsername(authenticationRequest.getUsername());
+
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
 
 }
