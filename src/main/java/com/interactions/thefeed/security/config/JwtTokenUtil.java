@@ -1,4 +1,4 @@
-package com.interactions.thefeed.config;
+package com.interactions.thefeed.security.config;
 
 import java.io.Serializable;
 import java.util.Date;

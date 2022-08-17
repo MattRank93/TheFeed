@@ -1,20 +1,17 @@
-package com.interactions.thefeed.controller;
+package com.interactions.thefeed.security.controllers;
 
-import java.util.Objects;
-
+import com.interactions.thefeed.requestobjects.UserRequest;
 import com.interactions.thefeed.responseobjects.JwtResponse;
-import com.interactions.thefeed.config.JwtTokenUtil;
+import com.interactions.thefeed.security.config.JwtTokenUtil;
 import com.interactions.thefeed.requestobjects.JwtRequest;
 import com.interactions.thefeed.security.services.UserDetailsServiceImpl;
-//import com.interactions.thefeed.services.JwtUserDetailsService;
+import com.interactions.thefeed.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +29,19 @@ public class JwtAuthenticationController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private final UserService userService;
+
+    public JwtAuthenticationController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserRequest inputUser) {
+        return userService.register(inputUser);
+    }
+
+
     @PatchMapping(value = "/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
@@ -45,6 +55,7 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
+    //TODO: move authenticate to service
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

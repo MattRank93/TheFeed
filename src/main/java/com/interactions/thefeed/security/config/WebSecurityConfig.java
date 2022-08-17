@@ -1,4 +1,4 @@
-package com.interactions.thefeed.config;
+package com.interactions.thefeed.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

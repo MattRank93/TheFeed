@@ -1,4 +1,4 @@
-package com.interactions.thefeed.middleware;
+package com.interactions.thefeed.security.middleware;
 
 import org.springframework.stereotype.Component;
 
