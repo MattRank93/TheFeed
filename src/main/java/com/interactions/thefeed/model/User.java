@@ -69,5 +69,6 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.phone = phone;
+
     }
 }

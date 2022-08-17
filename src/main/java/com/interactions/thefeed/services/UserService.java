@@ -87,6 +87,7 @@ public class UserService {
                     }
                 });
             }
+            user.setRoles(roles);
             userRepo.save(user);
             UserResponse userResponseObject = new UserResponse(userRequest.getUsername(),
                     userRequest.getEmail(),
