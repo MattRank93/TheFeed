@@ -7,13 +7,14 @@ import com.interactions.thefeed.requestobjects.UserRequest;
 import com.interactions.thefeed.responseobjects.GeneralResponseObject;
 import com.interactions.thefeed.responseobjects.JwtResponse;
 import com.interactions.thefeed.responseobjects.UserResponse;
-import com.interactions.thefeed.services.JwtUserDetailsService;
+//import com.interactions.thefeed.services.JwtUserDetailsService;
 import com.interactions.thefeed.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -26,7 +27,7 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private JwtUserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private final UserService userService;
@@ -55,16 +56,16 @@ public class UserController {
         return userService.getOneUser(inputUser);
     }
 
-    @PatchMapping("/authenticate")
-    public ResponseEntity<?> login(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        userService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
-
-        final String token = jwtTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new JwtResponse(token));
-    }
+//    @PatchMapping("/authenticate")
+//    public ResponseEntity<?> login(@RequestBody JwtRequest authenticationRequest) throws Exception {
+//        userService.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+//
+//        final UserDetails userDetails = userDetailsService
+//                .loadUserByUsername(authenticationRequest.getUsername());
+//
+//        final String token = jwtTokenUtil.generateToken(userDetails);
+//
+//        return ResponseEntity.ok(new JwtResponse(token));
+//    }
 
 }

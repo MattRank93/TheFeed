@@ -1,9 +1,11 @@
 package com.interactions.thefeed.services;
 
+import com.interactions.thefeed.model.ERole;
+import com.interactions.thefeed.model.Role;
 import com.interactions.thefeed.model.User;
+import com.interactions.thefeed.repository.RoleRepository;
 import com.interactions.thefeed.repository.UserRepository;
 import com.interactions.thefeed.requestobjects.UserRequest;
-import com.interactions.thefeed.responseobjects.GeneralResponseObject;
 import com.interactions.thefeed.responseobjects.UserResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,45 +15,78 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class UserService {
 
+    @Autowired
+    PasswordEncoder encoder;
 
     private final UserRepository userRepo;
+
+    private final RoleRepository roleRepo;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserService(UserRepository userRepo) {
+    public UserService(UserRepository userRepo, RoleRepository roleRepo) {
         this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
     }
 
 
     public ResponseEntity<?> register(@NotNull UserRequest userRequest) {
 
-        Optional<User> optUser = userRepo.findOneUserByEmail(userRequest.getEmail());
-
-        if (!optUser.isEmpty()) {
-            GeneralResponseObject generalResponseObject = new GeneralResponseObject("fail", "Email address " + userRequest.getEmail() + " existed", userRequest);
-            return new ResponseEntity<>(generalResponseObject, HttpStatus.BAD_REQUEST);
-        }
+//        Optional<User> optUser = userRepo.findOneUserByEmail(userRequest.getEmail());
+//
+////        if (!optUser.isEmpty()) {
+////            GeneralResponseObject generalResponseObject = new GeneralResponseObject("fail", "Email address " + userRequest.getEmail() + " existed", userRequest);
+////            return new ResponseEntity<>(generalResponseObject, HttpStatus.BAD_REQUEST);
+////        }
 
         try {
             User user = new User(
                     userRequest.getUsername(),
                     userRequest.getEmail(),
-                    userRequest.getPassword(),
+                    encoder.encode(userRequest.getPassword()),
                     userRequest.getFirstname(),
                     userRequest.getLastname(),
                     userRequest.getPhone(),
-                    "user"
+                    ERole.ROLE_USER.name()
             );
+            Set<String> strRoles = userRequest.getRoles();
+            Set<Role> roles = new HashSet<>();
+            if (strRoles == null) {
+                Role userRole = roleRepo.findByName(ERole.ROLE_USER)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                roles.add(userRole);
+            } else {
+                strRoles.forEach(role -> {
+                    switch (role) {
+                        case "admin":
+                            Role adminRole = roleRepo.findByName(ERole.ROLE_ADMIN)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(adminRole);
+                            break;
+                        case "mod":
+                            Role modRole = roleRepo.findByName(ERole.ROLE_MODERATOR)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(modRole);
+                            break;
+                        default:
+                            Role userRole = roleRepo.findByName(ERole.ROLE_USER)
+                                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                            roles.add(userRole);
+                    }
+                });
+            }
             userRepo.save(user);
             UserResponse userResponseObject = new UserResponse(userRequest.getUsername(),
                     userRequest.getEmail(),

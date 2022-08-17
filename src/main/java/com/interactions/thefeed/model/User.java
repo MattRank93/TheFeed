@@ -2,6 +2,7 @@ package com.interactions.thefeed.model;
 
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -30,13 +33,13 @@ public class User {
 
     @NotBlank( message = "must contain username")
     @Size(max = 100)
-    @Indexed(unique=true)
+    @Indexed(unique = true)
     private String username;
 
     @NotBlank( message = "must contain email")
     @Size(max = 100)
     @Email
-    @Indexed(unique=true)
+    @Indexed(unique = true)
     private String email;
 
     @NotBlank( message = "must contain password")
@@ -51,8 +54,8 @@ public class User {
     @Size(max = 20)
     private String lastname;
 
-    @NotBlank
-    private String role = "user";
+    @DBRef
+    private Set<Role> roles = new HashSet<>();
 
 
     private String phone;

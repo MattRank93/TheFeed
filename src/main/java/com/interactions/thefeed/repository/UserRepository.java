@@ -23,7 +23,11 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query("{username:'?0'}")
     User findOneUserByName(String username);
 
+    @Query("{username:'?0'}")
+    Boolean existsByUsername(String username);
 
+    @Query("{email:'?0'}")
+    Boolean existsByEmail(String email);
 
     @Query(value="{category:'?0'}", fields="{'name' : 1, 'quantity' : 1}")
     List<User> findAll(String category);
