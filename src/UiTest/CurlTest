@@ -13,3 +13,19 @@ curl --location --request POST 'localhost:7886/authenticate/register' \
     "phone": "3815425986",
     "roles": ["admin","mod"]
     }'
+
+
+
+
+
+json=$(curl --location --request PATCH 'localhost:7886/authenticate/login' \
+       --header 'Content-Type: application/json' \
+       --data-raw '{
+           "username": "mattyboi",
+           "password": "5minrspp"
+       }') \
+&& token=$(echo $json | sed "s/{.*\"token\":\"\([^\"]*\).*}/\1/g") \
+&& echo "token = $token"
+
+curl --location --request GET 'localhost:7886/users/get-one-user-param?username=tom' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJDaGxvZUFkbWluIiwiZXhwIjoxNjYwODU1ODYyLCJpYXQiOjE2NjA4Mzc4NjJ9.Ja6eKnOQAVQhzYYO1H10z0hIWDBqbM_yjJNOwvoDK6Ti5la5R78XIMng-BYvn4R-KgceF-vGaRvx11VM3bfo-A'

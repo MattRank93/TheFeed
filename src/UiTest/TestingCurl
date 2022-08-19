@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+json=$( curl --location --request PATCH 'localhost:7886/authenticate/login' \
+        --header 'Content-Type: application/json' \
+        --data-raw '{
+            "username": "mattyboi",
+            "password": "5minrspp"
+        }' )
+token=$( jq -r ".token" <<<"$json" )
+echo $token
