@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/users")
@@ -30,6 +32,7 @@ public class UserController {
         return userService.getOneUser(inputUser);
     }
 
+    //Todo:Implement roll restriction
     @GetMapping("/get-one-user-delete")
     public ResponseEntity<?> getOneUserAndDelete( UserRequest inputUser) {
         return userService.getOneUserAndDelete(inputUser);

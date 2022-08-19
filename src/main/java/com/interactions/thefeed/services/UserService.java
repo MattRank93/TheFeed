@@ -119,8 +119,8 @@ public class UserService {
     }
 
 
+    //TODO:Implement user restriction, only the user should be able to delete themselves. or an admin
     public ResponseEntity<?> getOneUserAndDelete(@NotNull UserRequest userRequest) {
-
         try {
             if (userRequest.getEmail() != null) {
                 userRepo.deleteByEmail(userRequest.getEmail());
