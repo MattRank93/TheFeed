@@ -1,0 +1,15 @@
+#!/bin/bash
+
+curl --location --request GET 'localhost:7886/health'
+
+curl --location --request POST 'localhost:7886/authenticate/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "username": "mattyboi",
+    "email": "matty@gmail.com",
+    "password": "5minrspp",
+    "firstname": "matty",
+    "lastname": "rank",
+    "phone": "3815425986",
+    "roles": ["admin","mod"]
+    }'
