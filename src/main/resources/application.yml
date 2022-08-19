@@ -7,6 +7,7 @@ spring:
       host: localhost
       port: 27017
       database: TheFeed
+      auto-index-creation: true
   profiles:
     active: dev
 
