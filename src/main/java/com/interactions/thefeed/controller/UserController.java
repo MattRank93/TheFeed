@@ -26,13 +26,13 @@ public class UserController {
     }
 
     @GetMapping("/get-one-user")
-    public ResponseEntity<?> getOneUser(@RequestParam UserRequest inputUser) {
+    public ResponseEntity<?> getOneUserParam( UserRequest inputUser) {
         return userService.getOneUser(inputUser);
     }
 
-    @GetMapping("/get-one-user-param")
-    public ResponseEntity<?> getOneUserParam( UserRequest inputUser) {
-        return userService.getOneUser(inputUser);
+    @GetMapping("/get-one-user-delete")
+    public ResponseEntity<?> getOneUserAndDelete( UserRequest inputUser) {
+        return userService.getOneUserAndDelete(inputUser);
     }
 
 

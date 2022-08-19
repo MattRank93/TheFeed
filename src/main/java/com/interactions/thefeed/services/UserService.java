@@ -44,12 +44,6 @@ public class UserService {
 
     public ResponseEntity<?> register(@NotNull UserRequest userRequest) {
 
-//        Optional<User> optUser = userRepo.findOneUserByEmail(userRequest.getEmail());
-//
-////        if (!optUser.isEmpty()) {
-////            GeneralResponseObject generalResponseObject = new GeneralResponseObject("fail", "Email address " + userRequest.getEmail() + " existed", userRequest);
-////            return new ResponseEntity<>(generalResponseObject, HttpStatus.BAD_REQUEST);
-////        }
 
         try {
             User user = new User(
@@ -116,6 +110,24 @@ public class UserService {
             } else if (userRequest.getUsername() != null) {
                 User user = userRepo.findOneUserByName(userRequest.getUsername());
                 return new ResponseEntity<>(user, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(userRequest, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    public ResponseEntity<?> getOneUserAndDelete(@NotNull UserRequest userRequest) {
+
+        try {
+            if (userRequest.getEmail() != null) {
+                userRepo.deleteByEmail(userRequest.getEmail());
+                return new ResponseEntity<>(userRequest.getEmail(), HttpStatus.OK);
+            } else if (userRequest.getUsername() != null) {
+                userRepo.deleteByUsername(userRequest.getUsername());
+                return new ResponseEntity<>(userRequest.getUsername(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(userRequest, HttpStatus.BAD_REQUEST);
             }

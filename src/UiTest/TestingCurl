@@ -1,11 +1,7 @@
 #!/bin/bash
 
+token="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXR0eWJvaSIsImV4cCI6MTY2MDk1MTg1NCwiaWF0IjoxNjYwOTMzODU0fQ.0al52fVLcI_9r18LnXuYhCTsIXYzliFYVQAPT_hVXT3ovqs6dX3gVLdXwaM_O6wTuzHfZTXmVxtgcOqox3oudw"
 
-json=$( curl --location --request PATCH 'localhost:7886/authenticate/login' \
-        --header 'Content-Type: application/json' \
-        --data-raw '{
-            "username": "mattyboi",
-            "password": "5minrspp"
-        }' )
-token=$( jq -r ".token" <<<"$json" )
-echo $token
+curl -i --location --request GET 'localhost:7886/users/get-one-user-delete?username=mattyboi' \
+        --header 'Authorization: Bearer '"$token"''
+echo "token = $token"

@@ -1,8 +1,8 @@
 package com.interactions.thefeed.repository;
 import com.interactions.thefeed.model.User;
+import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +15,14 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query("{email:'?0'}")
     Optional<User> findOneUserByEmail(String email);
 
+    @DeleteQuery("{email:'?0'}")
+    void deleteByEmail(String email);
+
+    @DeleteQuery("{username:'?0'}")
+    void deleteByUsername(String username);
+
+    @DeleteQuery("{lastname:'?0'}")
+    void deleteByLastname(String lastname);
 
     @Query("{id:'?0'}")
     User findOneById(UUID id);
